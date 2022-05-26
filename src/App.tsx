@@ -1,26 +1,55 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import { Routes, Route } from "react-router-dom";
+import { connect } from "react-redux";
+import LogIn from "./Pages/LogIn";
+import Saludos from "./components/Saludos";
+import Books from "./Pages/Books";
+import HandleRoutes from "./routes/HandleRoutes";
 
-function App() {
+function App({ isAuthenticated }: any) {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Routes>
+        {/* Public Routes */}
+        <Route
+          path="/"
+          element={
+            <HandleRoutes
+              element={<LogIn />}
+              isAutenticated={isAuthenticated}
+            />
+          }
+        />
+        {/* Private Route */}
+        <Route
+          path="/grettings"
+          element={
+            <HandleRoutes
+              element={<Saludos />}
+              isPrivate={true}
+              isAutenticated={isAuthenticated}
+            />
+          }
+        />
+        <Route
+          path="/books"
+          element={
+            <HandleRoutes
+              element={<Books />}
+              isPrivate={true}
+              isAutenticated={isAuthenticated}
+            />
+          }
+        />
+      </Routes>
     </div>
   );
 }
 
-export default App;
+const mapStateToProps = (state: any) => {
+  return {
+    isAuthenticated: state.auth.isAutenticated,
+  };
+};
+
+export default connect(mapStateToProps)(App);
